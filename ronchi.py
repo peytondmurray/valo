@@ -40,7 +40,23 @@ def ronchi(
     b = np.floor(xp/d)
     return np.bitwise_xor(~np.abs(b % 2).astype(bool), neg)
 
-def ronchigram(a, f, d, zoff, phi, sph, coma, astig, defocus, n, m, neg=False, xsize=1, xoff=1):
+
+def ronchigram(
+    a,
+    f,
+    d,
+    zoff,
+    phi,
+    sph,
+    coma,
+    astig,
+    defocus,
+    n,
+    m,
+    neg=False,
+    xsize=1,
+    xoff=1
+):
     """Generate a ronchigram.
 
     Parameters
@@ -132,23 +148,24 @@ def ronchigram(a, f, d, zoff, phi, sph, coma, astig, defocus, n, m, neg=False, x
     return si.griddata(
         (xm.flatten(), ym.flatten()),
         g1.flatten(),
-        (xa, ya)
+        (xa, ya),
+        method='nearest'
     )
 
 
 fig, ax = plt.subplots(1, 1, figsize=(10, 10))
 
-nxy = 200
+nxy = 100
 rg = ronchigram(
     a=25,
-    f=200,
+    f=250,
     d=0.1,
     zoff=-30,
     phi=0,
-    sph=0,
-    coma=0,
-    astig=0,
-    defocus=0.0005,
+    sph=1e-3,
+    coma=1e-4,
+    astig=8e-4,
+    defocus=-3.6e-3,
     n=nxy,
     m=nxy,
     neg=False,
@@ -156,5 +173,6 @@ rg = ronchigram(
     xoff=0,
 )
 
+ax.set_aspect('equal')
 ax.imshow(rg, interpolation='none', origin='lower')
 plt.show()
